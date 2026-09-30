@@ -104,29 +104,46 @@ void clear(Stack& s) {
     }
 }
 
+char newPop(Stack& s){
+    if (isEmpty(s)) return '\0'; // Mengembalikan null char jika kosong
+    
+    Node* temp = s.top;
+    char data = temp->data;
+    
+    s.top = s.top->next;
+    delete temp;
+    
+    return data;
+}
+
 // SOAL 4
 bool kurungSeimbang(const string& ekspresi) {
-    int text_length = ekspresi.length();
+    Stack s;
+    inisialisasi(s);
 
-    if (ekspresi.empty())
-    {
-        return true;
+    for (int i = 0; i < ekspresi.length(); i++) {
+        char karakter = ekspresi[i];
+
+        if (karakter == '(' || karakter == '{' || karakter == '[') {
+            push(s, karakter);
+        }
+        else if (karakter == ')' || karakter == '}' || karakter == ']') {
+            
+            if (isEmpty(s)) {
+                return false; 
+            }
+
+            char kurungAtas = newPop(s);
+
+            if ((karakter == ')' && kurungAtas != '(') ||
+                (karakter == '}' && kurungAtas != '{') ||
+                (karakter == ']' && kurungAtas != '[')) {
+                return false; 
+            }
+        }
     }
     
-
-    if (ekspresi[0] == '(' && ekspresi[text_length - 1] == ')')
-    {
-        return true;
-    } else if (ekspresi[0] == '[' && ekspresi[text_length - 1] == ']') {
-        return true;
-    } else if (ekspresi[0] == '{' && ekspresi[text_length - 1] == '}') {
-        return true;
-    } else
-    {
-        return false;
-    }
-    
-    return false;
+    return isEmpty(s);
 }
 
 // =============================================================================
